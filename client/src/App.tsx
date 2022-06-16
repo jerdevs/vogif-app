@@ -1,15 +1,12 @@
-import React from "react";
-import GifGrid from "./components/GifGrid/GifGrid";
-import Leaderboard from "./components/Leaderboard/Leaderboard";
-import TopBanner from "./components/TopBanner/TopBanner";
+import * as React from "react";
+import AppRoutes from "./AppRoutes";
+import TransactionProvider from "./providers/TransactionProvider";
 
 const App: React.FC = (): React.ReactElement => {
   return (
-    <div className="font-mono">
-      <TopBanner />
-      <Leaderboard />
-      <GifGrid />
-    </div>
+    <TransactionProvider>
+      <AppRoutes />
+    </TransactionProvider>
   );
 };
 

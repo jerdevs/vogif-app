@@ -1,7 +1,8 @@
 import React from "react";
+import { SubmitGifState } from "../../providers/TransactionProvider.interfaces";
 import Input, { InputProps } from "../Input/Input";
 
-interface AddGifForm {
+export interface AddGifForm {
   addressTo: string;
   gifUrl: string;
   amount: number;
@@ -12,18 +13,38 @@ interface AddGifFormError {
   gifUrl: string;
 }
 
-const AddGif: React.FC = (): React.ReactElement => {
-  const [addGifForm, setAddGifForm] = React.useState<AddGifForm>({
+interface AddGifProps {
+  submitGif: SubmitGifState;
+  submitAddGif?: (data: AddGifForm) => void;
+}
+
+const AddGif: React.FC<AddGifProps> = (
+  props: AddGifProps
+): React.ReactElement => {
+  const { submitGif, submitAddGif } = props;
+
+  const initialAddGifFormData: AddGifForm = {
     addressTo: "",
     gifUrl: "",
     amount: 0.0001,
-  });
+  };
+
+  const [addGifForm, setAddGifForm] = React.useState<AddGifForm>(
+    initialAddGifFormData
+  );
   const [addGifFormError, setAddGifFormError] = React.useState<AddGifFormError>(
     {
       addressTo: "",
       gifUrl: "",
     }
   );
+
+  React.useEffect((): void => {
+    if (submitGif.success || submitGif.error) {
+      setAddGifForm(initialAddGifFormData);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [submitGif]);
 
   const isValidUrl = (url: string): boolean => {
     return (
@@ -32,6 +53,9 @@ const AddGif: React.FC = (): React.ReactElement => {
     );
   };
 
+  const checkInvalidUrl = (url: string): string => {
+    return isValidUrl(url) ? "" : "Invalid URL";
+  };
   const addGifInputs: InputProps[] = [
     {
       label: "Address to",
@@ -64,11 +88,7 @@ const AddGif: React.FC = (): React.ReactElement => {
         });
         setAddGifFormError({
           ...addGifFormError,
-          gifUrl: value
-            ? isValidUrl(value)
-              ? ""
-              : "Invalid URL"
-            : "GIF URL cannot be empty",
+          gifUrl: value ? checkInvalidUrl(value) : "GIF URL cannot be empty",
         });
       },
       error: addGifFormError.gifUrl,
@@ -91,7 +111,7 @@ const AddGif: React.FC = (): React.ReactElement => {
     },
   ];
 
-  const addGif = (): void => {
+  const addGif = (e: React.MouseEvent<HTMLButtonElement>): void => {
     setAddGifFormError({
       addressTo: addGifForm.addressTo ? "" : "Address cannot be empty",
       gifUrl: addGifForm.gifUrl ? "" : "GIF URL cannot be empty",
@@ -102,14 +122,15 @@ const AddGif: React.FC = (): React.ReactElement => {
       !addGifFormError.addressTo &&
       !addGifFormError.gifUrl
     ) {
-      console.log(addGifForm);
+      e.preventDefault();
+      submitAddGif && submitAddGif(addGifForm);
     }
   };
 
   return (
     <div className="w-full pt-6 sm:pt-0">
-      <div className="text-white pb-3 text-center sm:text-left">
-        Curious to see how popular your favourite GIPHY is around the world? Add
+      <div className="text-white pb-4 text-center lg:text-left text-sm sm:text-base">
+        Curious to see how popular your favourite GIF is around the world? Add
         them here!
       </div>
       {addGifInputs.map(
@@ -126,17 +147,35 @@ const AddGif: React.FC = (): React.ReactElement => {
               step={input.step}
               description={input.description}
               error={input.error}
+              disabled={submitGif.loading}
             />
           );
         }
       )}
-      <div className="flex justify-end">
+      <div
+        className={`flex ${
+          submitGif.error || submitGif.success
+            ? "justify-between"
+            : "justify-end"
+        } items-center mt-2`}
+      >
+        {submitGif.error && (
+          <div className="text-red-300 text-sm">
+            Transaction error, please try again later.
+          </div>
+        )}
+        {submitGif.success && (
+          <div className="text-teal-400 text-sm">
+            Your GIF has been uploaded successfully!
+          </div>
+        )}
         <button
-          className="px-6 py-1 mt-2 uppercase font-semibold tracking-wider border-2 border-teal-400 text-teal-400"
+          className="px-6 py-1 text-sm sm:text-base uppercase font-semibold tracking-wider border-2 border-teal-400 text-teal-400"
           type="submit"
           onClick={addGif}
+          disabled={submitGif.loading}
         >
-          Add
+          {submitGif.loading ? "Adding..." : "Add"}
         </button>
       </div>
     </div>

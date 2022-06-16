@@ -4,16 +4,14 @@ export interface GifCardProps {
   votes: number;
   icon?: React.ReactElement;
   isLeaderboard?: boolean;
+  onVote?: (gifUrl: string) => void;
+  disabled?: boolean;
 }
 
 const GifCard: React.FC<GifCardProps> = (
   props: GifCardProps
 ): React.ReactElement => {
-  const { imgUrl, alt, votes, icon, isLeaderboard } = props;
-
-  const voteGif = (): void => {
-    console.log("vote");
-  };
+  const { imgUrl, alt, votes, icon, isLeaderboard, onVote, disabled } = props;
 
   return (
     <div className="flex items-center">
@@ -29,7 +27,7 @@ const GifCard: React.FC<GifCardProps> = (
             <div
               className={`font-bold italic pl-4 ${
                 isLeaderboard
-                  ? "text-xl sm:text-base md:text-xl text-slate-800"
+                  ? "text-base sm:text-lg md:text-xl text-slate-800"
                   : "text-base text-white"
               }`}
             >
@@ -38,15 +36,18 @@ const GifCard: React.FC<GifCardProps> = (
           </div>
           <div className="flex justify-center pt-3">
             <button
-              className={`px-6 py-1 uppercase font-semibold tracking-wider border-2 ${
-                isLeaderboard
+              className={`px-6 py-1 text-sm sm:text-base uppercase font-semibold tracking-wider border-2 ${
+                disabled
+                  ? "border-slate-400 text-slate-400"
+                  : isLeaderboard
                   ? "border-slate-800 text-slate-800"
                   : "border-teal-400 text-teal-400"
               }`}
               type="submit"
-              onClick={voteGif}
+              onClick={(): void => onVote && onVote(imgUrl)}
+              disabled={disabled}
             >
-              Vote
+              {disabled ? "Voting..." : "Vote"}
             </button>
           </div>
         </div>

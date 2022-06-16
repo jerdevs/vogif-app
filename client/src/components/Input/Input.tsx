@@ -10,6 +10,7 @@ export interface InputProps {
   step?: number;
   description?: string;
   error?: string;
+  disabled?: boolean;
 }
 
 const Input: React.FC<InputProps> = (props: InputProps): React.ReactElement => {
@@ -23,14 +24,21 @@ const Input: React.FC<InputProps> = (props: InputProps): React.ReactElement => {
     step,
     description,
     error,
+    disabled,
   } = props;
 
   return (
     <div className="flex flex-col pb-3">
       <label className="text-slate-200 text-xs pb-1">{label}</label>
       <input
-        className={`px-2 py-1 bg-transparent text-teal-400 border-2 ${
-          error ? "border-red-300" : "border-white"
+        className={`px-2 text-sm sm:text-base py-1 bg-transparent ${
+          disabled ? "text-slate-400" : "text-teal-400"
+        } border-2 ${
+          error
+            ? "border-red-300"
+            : disabled
+            ? "border-slate-400"
+            : "border-white"
         } focus:outline-0`}
         placeholder={placeholder}
         name={name}
@@ -45,9 +53,16 @@ const Input: React.FC<InputProps> = (props: InputProps): React.ReactElement => {
           }
         }}
         min={step && 0.0001}
+        disabled={disabled}
       />
       {description && (
-        <div className="text-white text-xs italic pt-1">{description}</div>
+        <div
+          className={`${
+            disabled ? "text-slate-400" : "text-white"
+          } text-xs italic pt-1`}
+        >
+          {description}
+        </div>
       )}
       {error && <div className="text-red-300 text-xs italic pt-1">{error}</div>}
     </div>

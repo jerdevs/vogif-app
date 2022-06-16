@@ -1,7 +1,16 @@
 import { FaEthereum } from "react-icons/fa";
+import { shortenAddress } from "../../utils/App.utils";
 import { WalletCardStyled } from "./WalletCard.styled";
 
-const WalletCard: React.FC = (): React.ReactElement => {
+interface WalletCardProps {
+  currentAccount: string;
+}
+
+const WalletCard: React.FC<WalletCardProps> = (
+  props: WalletCardProps
+): React.ReactElement => {
+  const { currentAccount } = props;
+
   return (
     <WalletCardStyled className="h-52 w-96 rounded-lg p-4">
       <div className="flex flex-col justify-between h-full">
@@ -14,8 +23,12 @@ const WalletCard: React.FC = (): React.ReactElement => {
           </div>
         </div>
         <div>
-          <p className="text-slate-800 font-light text-sm">Address</p>
-          <p className="text-slate-800 font-semibold text-lg mt-1">Ethereum</p>
+          <p className="text-slate-800 font-light text-sm">
+            {currentAccount ? shortenAddress(currentAccount) : "Address"}
+          </p>
+          <p className="text-slate-800 font-semibold text-base sm:text-lg mt-1">
+            Ethereum
+          </p>
         </div>
       </div>
     </WalletCardStyled>
