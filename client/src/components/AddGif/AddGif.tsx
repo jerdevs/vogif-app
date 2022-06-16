@@ -59,7 +59,7 @@ const AddGif: React.FC<AddGifProps> = (
   const addGifInputs: InputProps[] = [
     {
       label: "Address to",
-      placeholder: "0xasdasd....fhahsd",
+      placeholder: "0xas4dh....f1x9csd",
       name: "addressTo",
       type: "text",
       value: addGifForm.addressTo,

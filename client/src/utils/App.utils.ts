@@ -43,5 +43,5 @@ export const getTransactions = (transactions: Transaction[]): Transaction[] => {
 };
 
 export const reverseArr = (arr: any[]): any[] => {
-  return arr.reverse();
+  return arr.slice().reverse();
 };

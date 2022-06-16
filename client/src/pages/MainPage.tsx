@@ -11,7 +11,7 @@ const MainPage: React.FC = (): React.ReactElement => {
   const onVote = (gifUrl: string): void => {
     submitAddGif &&
       submitAddGif({
-        addressTo: "0x736b55165486c901e566768F9E555E2720C831d1",
+        addressTo: process.env.REACT_APP_METAMASK_ACCOUNT || "",
         gifUrl,
         amount: 0.0001,
       });
