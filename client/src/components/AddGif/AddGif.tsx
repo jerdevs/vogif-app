@@ -9,7 +9,6 @@ export interface AddGifForm {
 }
 
 interface AddGifFormError {
-  addressTo: string;
   gifUrl: string;
 }
 
@@ -24,7 +23,7 @@ const AddGif: React.FC<AddGifProps> = (
   const { submitGif, submitAddGif } = props;
 
   const initialAddGifFormData: AddGifForm = {
-    addressTo: "",
+    addressTo: process.env.REACT_APP_METAMASK_ACCOUNT || "",
     gifUrl: "",
     amount: 0.0001,
   };
@@ -34,7 +33,6 @@ const AddGif: React.FC<AddGifProps> = (
   );
   const [addGifFormError, setAddGifFormError] = React.useState<AddGifFormError>(
     {
-      addressTo: "",
       gifUrl: "",
     }
   );
@@ -57,24 +55,6 @@ const AddGif: React.FC<AddGifProps> = (
     return isValidUrl(url) ? "" : "Invalid URL";
   };
   const addGifInputs: InputProps[] = [
-    {
-      label: "Address to",
-      placeholder: "0xas4dh....f1x9csd",
-      name: "addressTo",
-      type: "text",
-      value: addGifForm.addressTo,
-      onChange: (value: string): void => {
-        setAddGifForm({
-          ...addGifForm,
-          addressTo: value,
-        });
-        setAddGifFormError({
-          ...addGifFormError,
-          addressTo: value ? "" : "Address cannot be empty",
-        });
-      },
-      error: addGifFormError.addressTo,
-    },
     {
       label: "GIPHY URL",
       placeholder: "https://media.giphy.com/media/xUA7aQOfOFZyC4qvZe/giphy.gif",
@@ -113,15 +93,9 @@ const AddGif: React.FC<AddGifProps> = (
 
   const addGif = (e: React.MouseEvent<HTMLButtonElement>): void => {
     setAddGifFormError({
-      addressTo: addGifForm.addressTo ? "" : "Address cannot be empty",
       gifUrl: addGifForm.gifUrl ? "" : "GIF URL cannot be empty",
     });
-    if (
-      addGifForm.addressTo &&
-      addGifForm.gifUrl &&
-      !addGifFormError.addressTo &&
-      !addGifFormError.gifUrl
-    ) {
+    if (addGifForm.addressTo && addGifForm.gifUrl && !addGifFormError.gifUrl) {
       e.preventDefault();
       submitAddGif && submitAddGif(addGifForm);
     }
@@ -129,9 +103,23 @@ const AddGif: React.FC<AddGifProps> = (
 
   return (
     <div className="w-full pt-6 sm:pt-0">
-      <div className="text-white pb-4 text-center lg:text-left text-sm sm:text-base">
-        Curious to see how popular your favourite GIF is around the world? Add
-        them here!
+      <div className="pb-6 text-center lg:text-left text-sm sm:text-base">
+        <div className="text-white pb-4">
+          Curious to see how popular your favourite GIF is around the world? Add
+          them here!
+        </div>
+        <div className="text-white">
+          You can choose from a variety of GIFs{" "}
+          <a
+            className="underline underline-offset-4 hover:text-teal-400"
+            href="https://giphy.com/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            here
+          </a>
+          ! 🤩
+        </div>
       </div>
       {addGifInputs.map(
         (input: InputProps, index: number): React.ReactElement => {

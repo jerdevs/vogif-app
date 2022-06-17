@@ -1,3 +1,5 @@
+import { AiOutlineLink } from "react-icons/ai";
+
 export interface GifCardProps {
   imgUrl: string;
   alt: string;
@@ -20,7 +22,12 @@ const GifCard: React.FC<GifCardProps> = (
           isLeaderboard ? "border-slate-800" : "border-teal-400"
         }`}
       >
-        <img className="w-full" src={imgUrl} alt={alt} />
+        <div className="relative">
+          <img className="w-full" src={imgUrl} alt={alt} />
+          <a href={imgUrl} target="_blank" rel="noreferrer">
+            <AiOutlineLink className="text-teal-400 absolute top-4 right-4 hover:scale-125" />
+          </a>
+        </div>
         <div className="py-6">
           <div className="flex items-center justify-center">
             {icon}

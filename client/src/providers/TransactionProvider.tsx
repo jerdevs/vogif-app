@@ -74,6 +74,7 @@ const TransactionProvider: React.FC<TransactionProviderProps> = (
         method: "eth_requestAccounts",
       });
       setCurrentAccount(accounts[0]);
+      getAllTransactions();
     } catch (error) {
       console.error("No metamask installed - unable to connect wallet");
     }
@@ -87,6 +88,7 @@ const TransactionProvider: React.FC<TransactionProviderProps> = (
         params: [{ eth_accounts: {} }],
       });
       setCurrentAccount(accounts[0]);
+      getAllTransactions();
     } catch (error) {
       console.error("No metamask installed - unable to connect wallet");
     }
